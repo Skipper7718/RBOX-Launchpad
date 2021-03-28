@@ -1,6 +1,7 @@
 from pygame import midi
 import sys, serial, json
 from serial.tools.list_ports import comports
+from debug import printd
 
 class SerialController:
     def __init__(self, port:str, baud:int):
