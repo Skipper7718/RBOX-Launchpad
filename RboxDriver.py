@@ -15,14 +15,16 @@ class RBoxTask:
     def run(self):
         while (self._running):
             button = self.pi.read_button() -1
+            if(button < 16 and button >= 0):
 
-            printd(f"Button {button} was clicked!")
-            s = f"{self.config[button][0]}{self.config[button][1]}{self.config[button][2]}"
+                printd(f"Button {button} was clicked!")
+                s = f"{self.config[button][0]}{self.config[button][1]}{self.config[button][2]}"
 
-            payload = bytes.fromhex(s)
-            printd(payload.hex())
+                payload = bytes.fromhex(s)
+                printd(payload.hex())
+                printd(payload)
 
-            self.midi.connection.write_short(payload[0], payload[1], payload[2])
+                self.midi.connection.write_short(payload[0], payload[1], payload[2])
     
     def start(self, config):
         self._running = True

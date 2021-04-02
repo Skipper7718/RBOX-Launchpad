@@ -10,6 +10,11 @@ class SerialController:
     def read_button(self):
         byte = self.connection.read(1)
         return int.from_bytes(byte, "big")
+    
+    def send(self, payload):
+        self.connection.write(payload.encode())
+        self.connection.close()
+        self.connection.open()
 
 class MidiController:
     def __init__(self, port:int):

@@ -70,6 +70,7 @@ class Ui(QtWidgets.QMainWindow):
         self.rbox = rboxdriver.RBoxTask(self.serial_port.currentText(), int(self.midi_port.currentText().split()[0]))
         printd(self.rbox)
         self.connect.setEnabled(False)
+        self.rbox.pi.send("a")
         self.message("Connected!")
 
     def apply_changes(self):
