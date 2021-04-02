@@ -30,7 +30,7 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>20</y>
+       <y>10</y>
        <width>541</width>
        <height>41</height>
       </rect>
@@ -367,24 +367,11 @@
     <property name="title">
      <string/>
     </property>
-    <widget class="QCheckBox" name="connected">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>90</y>
-       <width>101</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>connected ?</string>
-     </property>
-    </widget>
     <widget class="QPushButton" name="connect">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>40</y>
+       <y>70</y>
        <width>101</width>
        <height>41</height>
       </rect>
@@ -434,7 +421,7 @@
       <string>config</string>
      </property>
     </widget>
-    <widget class="QComboBox" name="port">
+    <widget class="QComboBox" name="serial_port">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -454,7 +441,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>110</y>
+       <y>120</y>
        <width>121</width>
        <height>20</height>
       </rect>
@@ -534,6 +521,9 @@
      </property>
     </widget>
     <widget class="QSpinBox" name="color_r">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -544,6 +534,9 @@
      </property>
     </widget>
     <widget class="QSpinBox" name="color_g">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>40</x>
@@ -554,6 +547,9 @@
      </property>
     </widget>
     <widget class="QSpinBox" name="color_b">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>80</x>
@@ -639,6 +635,22 @@
      </property>
      <property name="text">
       <string>apply</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="midi_port">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>40</y>
+       <width>101</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="currentText">
+      <string/>
+     </property>
+     <property name="placeholderText">
+      <string>Port</string>
      </property>
     </widget>
    </widget>
