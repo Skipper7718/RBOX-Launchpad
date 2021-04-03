@@ -1,2 +1,5 @@
 __pycache__
 debug_log.txt
+build
+main.spec
+dist

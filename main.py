@@ -27,7 +27,7 @@ class Ui(QtWidgets.QMainWindow):
         self.running = False
         self.rbox = None
         
-        with open("config.json", "r") as f:
+        with open(resource_path("config.json"), "r") as f:
             self.settings = json.loads(f.read())
 
         self.serial_port    = self.findChild(QtWidgets.QComboBox, "serial_port")
@@ -90,7 +90,7 @@ class Ui(QtWidgets.QMainWindow):
             if(text != "" or self.selected_button != None):
                 self.settings[self.selected_button][i] = text
         
-        with open("config.json", "w") as f:
+        with open(resource_path("config.json"), "w") as f:
             f.write(json.dumps(self.settings, indent=4))
 
     def run_engine(self):
