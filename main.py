@@ -5,10 +5,18 @@ from debug import printd
 import midi_driver
 import rboxdriver
 
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 class Ui(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi("GUI.ui", self)
+        uic.loadUi(resource_path("GUI.ui"), self)
 
         self.buttons = []
         for i in range(16):
