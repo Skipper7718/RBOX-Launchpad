@@ -119,7 +119,7 @@ class Ui(QtWidgets.QMainWindow):
         self.run.setEnabled(False)
         self.config.setEnabled(True)
         self.rbox.start(self.settings)
-        self.message("Engine running")
+        self.message("Engines running")
 
 
     def stop_engine(self):
@@ -128,7 +128,7 @@ class Ui(QtWidgets.QMainWindow):
         self.run.setEnabled(True)
         self.set_button_status(True)
         self.rbox.stop()
-        self.message("Engine stopped, config possible")
+        self.message("Engines stopped, config possible")
         
 
 if __name__ == "__main__":

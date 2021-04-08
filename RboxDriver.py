@@ -60,6 +60,7 @@ class RBoxTask:
                 if (index != None):
                     self.pi.send_rgb(index, int(data[2], 16))
             self.query.pop(0)
+            sleep(0.01)
         printd("STOP QUERY ENGINE")
 
     def start(self, config):
