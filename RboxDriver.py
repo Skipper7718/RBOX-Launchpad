@@ -1,5 +1,6 @@
 import threading
 from time import sleep
+from textwrap import wrap
 import sys
 import midi_driver
 import threading
@@ -20,29 +21,30 @@ class RBoxTask:
         return None
     
     def run_data_engine(self):
+        printd("START MAIN ENGINE")
         while True:
             if not self._running: break
             button = self.pi.read_button() - 1
             if(button != None):
                 if(button < 16 and button >= 0):
 
-                    printd(f"Button {button} was clicked!")
+                    printd(f"Motion trigger: Button ID {button}")
                     s = f"{self.config[button][0]}{self.config[button][1]}{self.config[button][2]}"
 
                     payload = bytes.fromhex(s)
-                    printd(payload.hex())
-                    printd(payload)
+                    printd(f"generated payload: {payload.hex()}")
 
                     self.midi.connection.write_short(payload[0], payload[1], payload[2])
         printd("EXIT MAIN ENGINE")
     
     def run_rgb_engine(self):
+        printd("START RGB ENGINE")
         while self._running:
             data = self.midi.read_rgb_data()
-
             if(data != None):
-
+                printd(data)
                 if(data[0] == "90"):
+                    printd(f"GOT RGB SIGNAL: Button {data[1]}, pallette {data[2]}")
                     index = self.get_index(data[1])
 
                     if (index != None):

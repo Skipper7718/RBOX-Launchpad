@@ -3,7 +3,6 @@ from serial.tools.list_ports import comports
 from debug import printd
 import sys, os, json, midi_driver, rboxdriver
 
-
 def resource_path(relative_path):
     try:
         base_path = sys._MEIPASS
@@ -45,7 +44,7 @@ class Ui(QtWidgets.QMainWindow):
         self.to_tray        = self.findChild(QtWidgets.QAction, "to_tray")
         self.tray_icon = QtWidgets.QSystemTrayIcon(self)
 
-        self.tray_icon.setIcon(self.style().standardIcon(QtWidgets.QStyle.SP_DriveNetIcon))
+        self.tray_icon.setIcon(self.style().standardIcon(QtWidgets.QStyle.SP_ComputerIcon))
         self.to_tray.triggered.connect(self.to_tray_action)
         self.quit.triggered.connect(lambda : exit())
         self.connect.clicked.connect(self.connect_launchpad)
@@ -94,6 +93,7 @@ class Ui(QtWidgets.QMainWindow):
 
     def connect_launchpad(self):
         self.rbox = rboxdriver.RBoxTask(self.serial_port.currentText(), int(self.midi_port.currentText().split()[0]), int(self.midi_port_in.currentText().split()[0]))
+        printd("Trying to initialize component RboxTask\n"+self.serial_port.currentText()+ self.midi_port.currentText().split()[0]+ self.midi_port_in.currentText().split()[0])
         printd(self.rbox)
         self.connect.setEnabled(False)
         self.rbox.pi.send("a")

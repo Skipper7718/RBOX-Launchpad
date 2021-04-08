@@ -2,6 +2,7 @@ from pygame import midi
 import sys, serial, signal
 from debug import printd
 from textwrap import wrap
+from time import sleep
 midi.init()
 
 
@@ -16,18 +17,34 @@ class SerialController:
         self.connection = serial.Serial(port, baud, timeout=2)
     
     def read_button(self):
-        byte = self.connection.read(1)
+        if not self.connection.is_open:
+            self.connection.open
+        byte = self.connection.read(self.connection.inWaiting())
         return int.from_bytes(byte, "big")
     
     def send(self, payload):
         self.connection.write(payload.encode())
-        self.connection.close()
-        self.connection.open()
+        # self.connection.close()
+        # self.connection.open()
     
     def send_rgb(self, button, rgb):
-        message = f"{button}|{rgb}"
-        self.send(len(message))
+        if(len(str(button)) < 2):
+            button1 = f"0{button}"
+        else:
+            button1 = str(button)
+
+        if(len(str(rgb)) < 2):
+            rgb1 = f"00{rgb}"
+        elif(len(str(rgb)) < 3):
+            rgb1 = f"0{rgb}"
+        else:
+            rgb1 = str(rgb)
+        message = f"{button1}.{rgb1}"
         self.send(message)
+
+        self.connection.flushInput()
+        
+        printd(f"sending message {message}")
 
 class MidiController:
     def __init__(self, out_port:int, in_port:int):
@@ -41,8 +58,7 @@ class MidiController:
     def read_rgb_data(self):
         if(self.input.poll()):
             return wrap(bytearray(self.input.read(3)[0][0]).hex(),2)[:-1]
-        else:
-            return None
+            printd(wrap(bytearray(self.input.read(3)[0][0]).hex(),2)[:-1])
     
 def get_ports() -> list:
     arr = []
