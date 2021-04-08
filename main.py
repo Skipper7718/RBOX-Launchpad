@@ -35,9 +35,6 @@ class Ui(QtWidgets.QMainWindow):
         self.run            = self.findChild(QtWidgets.QPushButton, "run")
         self.config         = self.findChild(QtWidgets.QPushButton, "config")
         self.selected       = self.findChild(QtWidgets.QLabel, "selected")
-        self.color_r        = self.findChild(QtWidgets.QSpinBox, "color_r")
-        self.color_g        = self.findChild(QtWidgets.QSpinBox, "color_g")
-        self.color_b        = self.findChild(QtWidgets.QSpinBox, "color_b")
         self.guibytes       = [self.findChild(QtWidgets.QLineEdit, "byte1"), self.findChild(QtWidgets.QLineEdit, "byte2"), self.findChild(QtWidgets.QLineEdit, "byte3")]
         self.apply          = self.findChild(QtWidgets.QPushButton, "apply")
         self.quit           = self.findChild(QtWidgets.QAction, "quit")
@@ -51,6 +48,9 @@ class Ui(QtWidgets.QMainWindow):
         self.apply.clicked.connect(self.apply_changes)
         self.run.clicked.connect(self.run_engine)
         self.config.clicked.connect(self.stop_engine)
+        self.config.setEnabled(False)
+        self.apply.setEnabled(False)
+        self.set_button_status(False)
 
         self.serial_port.addItems(list(str(i).split()[0] for i in comports()))
         self.midi_port.addItems(midi_driver.get_ports())
@@ -98,6 +98,8 @@ class Ui(QtWidgets.QMainWindow):
         self.connect.setEnabled(False)
         self.rbox.pi.send("a")
         self.message("Connected!")
+        self.apply.setEnabled(True)
+        self.set_button_status(True)
 
 
     def apply_changes(self):
@@ -114,12 +116,16 @@ class Ui(QtWidgets.QMainWindow):
     def run_engine(self):
         self.set_button_status(False)
         self.apply.setEnabled(False)
+        self.run.setEnabled(False)
+        self.config.setEnabled(True)
         self.rbox.start(self.settings)
         self.message("Engine running")
 
 
     def stop_engine(self):
         self.apply.setEnabled(True)
+        self.config.setEnabled(False)
+        self.run.setEnabled(True)
         self.set_button_status(True)
         self.rbox.stop()
         self.message("Engine stopped, config possible")

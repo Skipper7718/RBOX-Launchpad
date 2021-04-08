@@ -55,11 +55,6 @@ class MidiController:
     def send(self, payload:bytes):
         self.connection.write_short(payload[0], payload[1], payload[2])
     
-    def read_rgb_data(self):
-        if(self.input.poll()):
-            return wrap(bytearray(self.input.read(3)[0][0]).hex(),2)[:-1]
-            printd(wrap(bytearray(self.input.read(3)[0][0]).hex(),2)[:-1])
-    
 def get_ports() -> list:
     arr = []
     _id = 0

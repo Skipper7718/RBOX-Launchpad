@@ -1,5 +1,10 @@
+import os
+
 debug = True
 log_file = False
+
+if(os.path.isfile("config.txt")):
+    log_file = True
 
 if(log_file):
     with open("debug_log.txt", "w") as d:

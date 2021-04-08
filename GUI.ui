@@ -678,7 +678,8 @@
        <string>-- MIDI out --</string>
       </property>
       <property name="icon">
-       <iconset theme="hier"/>
+       <iconset theme="hier">
+        <normaloff>.</normaloff>.</iconset>
       </property>
      </item>
     </widget>
@@ -707,27 +708,6 @@
       </property>
      </item>
     </widget>
-    <widget class="QPushButton" name="lightshow">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>280</y>
-       <width>101</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>16</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>lightshow</string>
-     </property>
-    </widget>
     <widget class="QPushButton" name="layout">
      <property name="enabled">
       <bool>false</bool>
@@ -735,7 +715,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>230</y>
+       <y>250</y>
        <width>101</width>
        <height>41</height>
       </rect>
