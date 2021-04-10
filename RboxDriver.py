@@ -27,7 +27,7 @@ class RBoxTask:
 
         while True:
             if not self.__running: break #close process when __running is false
-            button = self.pi.read_button() - 1 #red button input from USB
+            button = self.pi.read_button() #red button input from USB
             if(button != None):
                 if(button < 16 and button >= 0):
 
