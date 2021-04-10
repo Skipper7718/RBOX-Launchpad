@@ -3,4 +3,5 @@ debug_log.txt
 build
 main.spec
 dist
+misc
 .vscode
