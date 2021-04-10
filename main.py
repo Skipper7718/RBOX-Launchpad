@@ -39,7 +39,7 @@ class Ui(QtWidgets.QMainWindow):
         self.apply          = self.findChild(QtWidgets.QPushButton, "apply")
         self.quit           = self.findChild(QtWidgets.QAction, "quit")
         self.to_tray        = self.findChild(QtWidgets.QAction, "to_tray")
-        self.tray_icon = QtWidgets.QSystemTrayIcon(self)
+        self.tray_icon      = QtWidgets.QSystemTrayIcon(self)
 
         self.tray_icon.setIcon(self.style().standardIcon(QtWidgets.QStyle.SP_ComputerIcon))
         self.to_tray.triggered.connect(self.to_tray_action)

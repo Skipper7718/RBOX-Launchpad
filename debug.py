@@ -3,7 +3,7 @@ import os
 debug = True
 log_file = False
 
-if(os.path.isfile("config.txt")):
+if(os.path.isfile("debug.txt")):
     log_file = True
 
 if(log_file):

@@ -6,12 +6,6 @@ from time import sleep
 midi.init()
 
 
-def interrupt():
-    printd("got interrupt signal")
-    signal.alarm(0)
-    return None
-
-
 class SerialController:
     def __init__(self, port:str, baud:int=115200):
         self.connection = serial.Serial(port, baud, timeout=2)

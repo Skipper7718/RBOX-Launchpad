@@ -42,17 +42,20 @@ class RBoxTask:
         printd("START RGB ENGINE")
         while self._running:
             if(self.midi.input.poll()):
-                self.query.append(self.midi.input.read(3))
+                data = self.midi.input.read(1)
+                self.query.append(data)
+                printd(data)
                 
         printd("STOP RGB ENGINE")
     
     def run_query_engine(self):
         printd("START QUERY ENGINE")
         while self._running:
-            if(len(self.query) < 1): continue
-            dataquery = self.query[0]
-            data = wrap(bytearray(dataquery[0][0]).hex(), 2)[:-1]
-            printd(data)
+            try:
+                dataquery = self.query[0]
+                data = wrap(bytearray(dataquery[0][0]).hex(), 2)[:-1]
+            except:
+                continue
             if(data[0] == "90"):
                 index = self.get_index(data[1])
                 printd(f"GOT RGB SIGNAL: Button {data[1]}, pallette {data[2]}\nIndex >> {index}")
@@ -60,7 +63,7 @@ class RBoxTask:
                 if (index != None):
                     self.pi.send_rgb(index, int(data[2], 16))
             self.query.pop(0)
-            sleep(0.016)
+            sleep(0.002)
         printd("STOP QUERY ENGINE")
 
     def start(self, config):
