@@ -1,3 +1,5 @@
+#ws2812b module by raspberrypi
+
 import array, time
 from machine import Pin
 import rp2
