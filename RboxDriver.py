@@ -42,8 +42,7 @@ class RBoxTask:
         printd("START RGB ENGINE")
         while self._running:
             if(self.midi.input.poll()):
-                data = wrap(bytearray(self.midi.input.read(3)[0][0]).hex(),2)[:-1]
-                self.query.append(data)
+                self.query.append(self.midi.input.read(3))
                 
         printd("STOP RGB ENGINE")
     
@@ -51,7 +50,8 @@ class RBoxTask:
         printd("START QUERY ENGINE")
         while self._running:
             if(len(self.query) < 1): continue
-            data = self.query[0]
+            dataquery = self.query[0]
+            data = wrap(bytearray(dataquery[0][0]).hex(), 2)[:-1]
             printd(data)
             if(data[0] == "90"):
                 index = self.get_index(data[1])
@@ -60,7 +60,7 @@ class RBoxTask:
                 if (index != None):
                     self.pi.send_rgb(index, int(data[2], 16))
             self.query.pop(0)
-            sleep(0.01)
+            sleep(0.016)
         printd("STOP QUERY ENGINE")
 
     def start(self, config):
@@ -70,6 +70,10 @@ class RBoxTask:
         self.dataengine = threading.Thread(target=self.run_data_engine)
         self.dataengine.daemon = True
         self.dataengine.start()
+    
+        self.rgbengine1 = threading.Thread(target=self.run_rgb_engine)
+        self.rgbengine1.daemon = True
+        self.rgbengine1.start()
 
         self.rgbengine = threading.Thread(target=self.run_rgb_engine)
         self.rgbengine.daemon = True
@@ -84,4 +88,5 @@ class RBoxTask:
 
         self.dataengine.join()
         self.rgbengine.join()
+        self.rgbengine1.join()
         self.queryengine.join()
