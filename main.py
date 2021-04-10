@@ -3,6 +3,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui, uic
 from serial.tools.list_ports import comports
 from debug import printd
 
+#used for getting path for data embedded in the .exe
 def resource_path(relative_path):
     try:
         base_path = sys._MEIPASS
