@@ -52,7 +52,8 @@ class RBoxTask:
                 data = self.midi.input.read(1)
                 self.query.append(data)
 
-                printd(data)#debug
+                #printd(data)#debug
+                #printd(type(data[0][0][0]))
                 
         printd("STOP RGB ENGINE")
     
@@ -61,14 +62,14 @@ class RBoxTask:
         printd("START QUERY ENGINE")
 
         while self.__running:
-            #some invalid messages will give IndexError and sometimes other errors
-            try:
+            data = 0
+            if(len(self.query) > 0):
                 dataquery = self.query[0]
                 data = wrap(bytearray(dataquery[0][0]).hex(), 2)[:-1]
-            except:
-                if(len(self.query) > 0):
-                    self.query.pop(0)
-                continue #check next entry
+                print(data)
+
+            if(data == 0):
+                continue
 
             if(data[0] == "90"): #only NoteOn messages will be interpreted as RGB signals
                 index = self.get_index(data[1]) #get button index to send to launchpad
