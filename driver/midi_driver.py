@@ -4,6 +4,8 @@ from debug import printd
 from textwrap import wrap
 from time import sleep
 
+midi.init() #initialize pygame midi component
+
 #serial controller class
 class SerialController:
     def __init__(self, port:str, baud:int=115200):
@@ -11,11 +13,12 @@ class SerialController:
     
     #read button number from byte
     def read_button(self):
-        if not self.connection.is_open: #I dont know why, but sometimes the connection just closes
-            self.connection.open
-
-        byte = self.connection.read(self.connection.inWaiting()) #recieve waiting bytes
-        return int.from_bytes(byte, "big")
+        # if not self.connection.is_open: #I dont know why, but sometimes the connection just closes
+        #     self.connection.open()
+        waiting = self.connection.in_waiting
+        if(waiting > 0):
+            byte = self.connection.read(self.connection.in_waiting) #recieve waiting bytes
+            return int.from_bytes(byte, "big")
     
     #just write a string to launchpad
     def send(self, payload):
@@ -47,7 +50,6 @@ class SerialController:
 #midi controller class
 class MidiController:
     def __init__(self, out_port:int, in_port:int):
-        midi.init() #initialize pygame midi component
 
         self.connection = midi.Output(out_port) #set port to set button response
         self.input = midi.Input(in_port)        #set port to recieve RGB signals
@@ -62,7 +64,7 @@ def get_ports() -> list:
     __id = 0
 
     while True:
-        __info = midi.get_device__info(__id)
+        __info = midi.get_device_info(__id)
 
         if(__info != None):
             #I stands for input port and I for input port

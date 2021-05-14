@@ -707,6 +707,11 @@
         <normaloff>.</normaloff>.</iconset>
       </property>
      </item>
+     <item>
+      <property name="text">
+       <string>&gt;&gt; TILT &lt;&lt;</string>
+      </property>
+     </item>
     </widget>
     <widget class="QPushButton" name="layout">
      <property name="enabled">

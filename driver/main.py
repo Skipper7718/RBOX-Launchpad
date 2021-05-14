@@ -25,7 +25,9 @@ class Ui(QtWidgets.QMainWindow):
         self.selected_button = None
         self.running = False
         self.rbox = None
+        self.defaultTitle = None
         self.buttons = []
+        self.mode = 1
 
         #get buttons for config
         for i in range(16):
@@ -33,6 +35,7 @@ class Ui(QtWidgets.QMainWindow):
             self.buttons[i].clicked.connect(self.button_clicked)
 
         #get widgets
+        self.title          = self.findChild(QtWidgets.QLabel, "title")
         self.serial_port    = self.findChild(QtWidgets.QComboBox, "serial_port")
         self.midi_port      = self.findChild(QtWidgets.QComboBox, "midi_port")
         self.midi_port_in   = self.findChild(QtWidgets.QComboBox, "midi_port_in")
@@ -57,6 +60,7 @@ class Ui(QtWidgets.QMainWindow):
         self.config.setEnabled(False)
         self.apply.setEnabled(False)
         self.set_button_status(False)
+        self.run.setEnabled(False)
 
         # fill combo box
         self.serial_port.addItems(list(str(i).split()[0] for i in comports()))
@@ -106,19 +110,29 @@ class Ui(QtWidgets.QMainWindow):
             self.byte.setText(self.settings[self.selected_button][i])
 
     def connect_launchpad(self):
-        #create rbox object
-        self.rbox = rboxdriver.RBoxTask(self.serial_port.currentText(), int(self.midi_port.currentText().split()[0]), int(self.midi_port_in.currentText().split()[0]))
-        
-        #debug
-        printd("Trying to initialize component RboxTask\n"+self.serial_port.currentText()+ self.midi_port.currentText().split()[0]+ self.midi_port_in.currentText().split()[0])
-        printd(self.rbox)
-        
-        #toggle connected mode
-        self.rbox.pi.send       ("a") #send a for launchpad to start in performance mode
+
+        if(self.midi_port_in.currentText() == ">> TILT <<"):
+            self.mode = 2
+        else:
+            self.mode = 1
+
+        if(self.mode == 1):
+            #create rbox object
+            self.rbox = rboxdriver.RBoxTask(self.serial_port.currentText(), int(self.midi_port.currentText().split()[0]), int(self.midi_port_in.currentText().split()[0]))
+            printd("Trying to initialize component RboxTask\n"+self.serial_port.currentText()+ self.midi_port.currentText().split()[0]+ self.midi_port_in.currentText().split()[0])
+            printd(self.rbox)
+            self.connect.setEnabled (False)
+            self.apply.setEnabled   (True)
+            self.set_button_status  (True)
+            self.run.setEnabled     (True)
+            self.rbox.pi.send       ("a") #send a for launchpad to start in performance mode
+        elif(self.mode == 2):
+            self.rbox = rboxdriver.RBoxTilt(self.serial_port.currentText())
+            self.rbox.pi.send       ("f") #send a for launchpad to start in keyboard mode
+            self.connect.setEnabled (False)
+            self.run.setEnabled     (True)
+
         self.message            ("Connected!")
-        self.connect.setEnabled (False)
-        self.apply.setEnabled   (True)
-        self.set_button_status  (True)
 
 
     def apply_changes(self):
@@ -134,25 +148,38 @@ class Ui(QtWidgets.QMainWindow):
 
 
     def run_engine(self):
-        #start engines
-        self.rbox.start         (self.settings)
-        #change ui
-        self.set_button_status  (False)
-        self.apply.setEnabled   (False)
-        self.run.setEnabled     (False)
-        self.config.setEnabled  (True)
-        self.message            ("Engines running")
+        if(self.mode == 1):
+            #start engines
+            self.rbox.start         (self.settings)
+            #change ui
+            self.set_button_status  (False)
+            self.apply.setEnabled   (False)
+            self.run.setEnabled     (False)
+            self.config.setEnabled  (True)
+            self.message            ("Engines running")
+        else:
+            self.rbox.start()
+            self.defaultTitle = self.title.text()
+            self.title.setText("<< RboxTilt >>")
+            self.run.setEnabled     (False)
+            self.config.setEnabled  (True)
 
 
     def stop_engine(self):
-        #stop engines
-        self.rbox.stop          ()
-        #change ui
-        self.apply.setEnabled   (True)
-        self.config.setEnabled  (False)
-        self.run.setEnabled     (True)
-        self.set_button_status  (True)
-        self.message            ("Engines stopped, config possible")
+        if(self.mode == 1):
+            #stop engines
+            self.rbox.stop          ()
+            #change ui
+            self.apply.setEnabled   (True)
+            self.config.setEnabled  (False)
+            self.run.setEnabled     (True)
+            self.set_button_status  (True)
+            self.message            ("Engines stopped, config possible")
+        else:
+            self.rbox.stop()
+            self.title.setText(self.defaultTitle)
+            self.config.setEnabled  (False)
+            self.run.setEnabled     (True)
         
 
 if __name__ == "__main__":

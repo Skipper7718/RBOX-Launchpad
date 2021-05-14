@@ -1,4 +1,4 @@
-import threading, sys, midi_driver, threading
+import threading, sys, midi_driver, threading, json, pyautogui
 from time import sleep
 from textwrap import wrap
 from debug import printd
@@ -66,7 +66,8 @@ class RBoxTask:
                 dataquery = self.query[0]
                 data = wrap(bytearray(dataquery[0][0]).hex(), 2)[:-1]
             except:
-                self.query.pop(0)
+                if(len(self.query) > 0):
+                    self.query.pop(0)
                 continue #check next entry
 
             if(data[0] == "90"): #only NoteOn messages will be interpreted as RGB signals
@@ -78,11 +79,14 @@ class RBoxTask:
                     #relay message to launchpad
                     self.pi.send_rgb(index, int(data[2], 16))
 
-            self.query.pop(0)
+            if(len(self.query) > 0):
+                self.query.pop(0)
             sleep(0.002) #sleep for 2ms
 
         printd("STOP QUERY ENGINE")
-
+    
+    #library used for multiprocessing purposes. The RBOX has two engines for handling input so it can recieve the signals more precise
+    #there is a bug where one process is failing, thats why I will be switching the engine to rust soon
     def start(self, config):
         self.__running = True
         self.config = config
@@ -113,3 +117,38 @@ class RBoxTask:
         self.rgbengine  .join()
         self.rgbengine1 .join()
         self.queryengine.join()
+
+class RBoxTilt:
+    def __init__(self, port:str):
+        self.pi = midi_driver.SerialController(port)
+        self.__running = False
+
+        with open("tiltconfig.json", "r") as file:
+            self.config = json.loads(file.read())
+    
+    def run_tilt_engine(self):
+        printd("STARTING TILT ENGINE")
+        while True:
+            if not self.__running: break
+
+            button = self.pi.read_button()
+
+            if(button != None):
+                if(button < 16 and button >= 0):
+                    printd(f"MOTION TRIGGER: {button}")
+                    try:
+                        pyautogui.hotkey(*self.config[button])
+                    except:
+                        pass
+
+        printd("STOPPING TILT ENGINE")
+    
+    def start(self):
+        self.__running              = True
+        self.tiltengine             = threading.Thread(target=self.run_tilt_engine)
+        self.tiltengine.daemon      = True
+        self.tiltengine.start       ()
+    
+    def stop(self):
+        self.__running      = False
+        self.tiltengine     .join()
