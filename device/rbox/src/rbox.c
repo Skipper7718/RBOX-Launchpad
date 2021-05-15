@@ -222,11 +222,6 @@ void intro()
 
 void callback(int gpio, uint32_t events)
 {
-    gpio_set_irq_enabled_with_callback(gpio, GPIO_IRQ_EDGE_FALL, false, &callback);
-    for(int i = 0; i < 50; i++){
-        asm("NOP");
-    }
-    gpio_set_irq_enabled_with_callback(gpio, GPIO_IRQ_EDGE_FALL, true, &callback);
     for(int i = 0; i < 16; i++){
         if(pinout[i] == gpio)
         {
@@ -234,6 +229,11 @@ void callback(int gpio, uint32_t events)
             fflush(stdout);
         }
     }
+    gpio_set_irq_enabled_with_callback(gpio, GPIO_IRQ_EDGE_FALL, false, &callback);
+    for(int i = 0; i < 100; i++){
+        asm("NOP");
+    }
+    gpio_set_irq_enabled_with_callback(gpio, GPIO_IRQ_EDGE_FALL, true, &callback);
 }
 
 void rboxcontrol()
@@ -251,6 +251,7 @@ void rboxcontrol()
         char index[4] = {input[3], input[4], input[5], '\0'};
 
         set_pixel(remap[atoi(number)], RGB[atoi(index)][0], RGB[atoi(index)][1],RGB[atoi(index)][2]);
+        sleep_ms(1);
     }
 }
 

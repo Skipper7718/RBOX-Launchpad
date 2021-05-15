@@ -19,8 +19,8 @@ int main()
         char byte = getchar();
         printf("%c %d\n", byte, byte);
         if(byte == 97){
-            attach_interrupts();
             fill_pixel(0,0,0);
+            attach_interrupts();
             rboxcontrol();
         }
         else if(byte == 102){

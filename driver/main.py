@@ -49,7 +49,7 @@ class Ui(QtWidgets.QMainWindow):
         self.to_tray        = self.findChild(QtWidgets.QAction, "to_tray")
 
         #connect functions
-        self.to_tray.triggered.connect(lambda self: self.hide())
+        self.to_tray.triggered.connect(lambda : self.hide())
         self.quit.triggered.connect(lambda : exit())
         self.connect.clicked.connect(self.connect_launchpad)
         self.apply.clicked.connect(self.apply_changes)
