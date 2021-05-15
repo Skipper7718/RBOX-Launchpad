@@ -1,7 +1,9 @@
 import threading, sys, midi_driver, threading, json, pyautogui
+from main import resource_path
 from time import sleep
 from textwrap import wrap
 from debug import printd
+from ahk import AHK
 
 #Class called from main
 class RBoxTask:
@@ -121,6 +123,7 @@ class RBoxTask:
 
 class RBoxTilt:
     def __init__(self, port:str):
+        self.ahk = AHK(executable_path=resource_path("./AutoHotkeyU64.exe"))
         self.pi = midi_driver.SerialController(port)
         self.__running = False
 
@@ -135,12 +138,17 @@ class RBoxTilt:
             button = self.pi.read_button()
 
             if(button != None):
-                if(button < 16 and button >= 0):
-                    printd(f"MOTION TRIGGER: {button}")
-                    try:
-                        pyautogui.hotkey(*self.config[button])
-                    except:
-                        pass
+                printd(f"MOTION TRIGGER: {button}")
+                try:
+                    key = self.config[button]
+                    if(len(key) == 1):
+                        printd(f"\t>> SINGLE ACTION {key}")
+                        self.ahk.key_press(key[0])
+                    else:
+                        pyautogui.hotkey(*key)
+                        printd(f"\t>> DOUBLE ACTION {key}")
+                except:
+                    pass
 
         printd("STOPPING TILT ENGINE")
     
