@@ -123,7 +123,7 @@ class RBoxTask:
 
 class RBoxTilt:
     def __init__(self, port:str):
-        self.ahk = AHK(executable_path=resource_path("./AutoHotkeyU64.exe"))
+        self.ahk = AHK(executable_path=resource_path("AutoHotkeyU64.exe"))
         self.pi = midi_driver.SerialController(port)
         self.__running = False
 
