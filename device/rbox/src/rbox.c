@@ -225,6 +225,7 @@ void callback(int gpio, uint32_t events)
     for(int i = 0; i < 16; i++){
         if(pinout[i] == gpio)
         {
+            //printf("Button: %d\n", i);
             putchar(i);
             fflush(stdout);
         }

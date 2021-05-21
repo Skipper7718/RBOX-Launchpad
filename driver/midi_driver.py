@@ -18,9 +18,11 @@ class SerialController:
         waiting = self.connection.in_waiting
         if(waiting > 0):
             byte = self.connection.read(self.connection.in_waiting) #recieve waiting bytes
-            button = int.from_bytes(byte, "big")
+            button = int.from_bytes(byte, "little")
             if(button < 16 and button >=0):
                 return button
+            elif(button == 2573):
+                return 10
     
     #just write a string to launchpad
     def send(self, payload):
